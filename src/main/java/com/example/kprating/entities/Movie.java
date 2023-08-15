@@ -33,13 +33,14 @@ public class Movie {
         private double kp;
     }
 
-    public double getRating(){
+    public double getkpRating(){
         return rating.kp;
     }
 
-    public Person getDirector(){
+
+    public Person getPerson(String person){
         Optional<Person> optionalDirector = personArrayList.stream()
-                .filter(element -> element.getEnProfession().equals("director"))
+                .filter(element -> element.getEnProfession().equals(person))
                 .findFirst();
         Person director = optionalDirector.orElseThrow(() -> new NullPointerException());
 

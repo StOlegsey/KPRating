@@ -11,7 +11,7 @@ public interface VariousRatings {
 
     private static double getDirectorRating(Movie movie)
     {
-        Person director = movie.getDirector();
+        Person director = movie.getPerson("director");
 
         return 0.0;
     }
@@ -26,7 +26,7 @@ public interface VariousRatings {
 
     public static double getMovieRating(Movie movie){
 
-        double kpRating = 0.044 * movie.getRating() - 0.24;
+        double kpRating = 0.044 * movie.getkpRating() - 0.24;
 
         double movieRating = getActorRating()+ getWriterRating() + getDirectorRating(movie) + getGenreRating() + kpRating;
 
