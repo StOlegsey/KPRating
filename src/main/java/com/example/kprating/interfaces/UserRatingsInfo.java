@@ -4,26 +4,35 @@ import com.example.kprating.entities.Person;
 import com.example.kprating.entities.UserMovie;
 
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public interface UserRatingsInfo {
 
     public static LinkedHashMap<Person, Double> PersonsRating(ArrayList<UserMovie> userMovies, String person, Integer modifier){
 
-        List<Person> directorList = userMovies.stream()//Список списка топ3 персон
+        List<List<Person>> personList = userMovies.stream()//Список списка топ3 персон
                 .map((i) -> i.getPerson(person))
                 .collect(Collectors.toList());
 
-        final Integer dirSize = directorList.size();
+        System.out.println(personList);
 
-        LinkedHashMap<Person, Double> directorsRating = directorList.stream()// Person1, Person2
-                .map((i) -> i.getId())
+        final Integer dirSize = personList.size();
+
+        LinkedHashMap<Person, Double> personsRating = personList.stream()// Person1, Person2
+                .flatMap(List::stream)
+                .map(i -> i.getId())
                 .collect(Collectors.toMap(
-                        k -> k,
-                        v -> 1.0,
-                        (sum1, sum2) -> sum1 + sum2,
-                        (LinkedHashMap::new)
-                ))          // (id:1, amount:3); (id:2, amount:5)
+                                Function.identity(),
+                                p -> {
+                                    int index = personList.stream()
+                                            .flatMap(List::stream)
+                                            .collect(Collectors.toList())
+                                            .indexOf(p);
+                                    return index == 0 ? 1.0 : (1.0 - (index / (double) personList.size()));
+                                },
+                                (v1, v2) -> v1 + v2,
+                                LinkedHashMap::new))
                 .entrySet()
                 .stream()
                 .collect(Collectors.toMap(
@@ -36,7 +45,8 @@ public interface UserRatingsInfo {
                 .stream()
                 .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
                 .collect(Collectors.toMap(
-                        (k) -> (directorList.stream()
+                        (k) -> (personList.stream()
+                                .flatMap(List::stream)
                                 .filter((p)-> p.getId().equals(k.getKey()))
                                 .findFirst()
                                 .orElse(null)),
@@ -45,9 +55,9 @@ public interface UserRatingsInfo {
                         LinkedHashMap::new
                 ));
 
-        directorsRating.entrySet().stream()
+        personsRating.entrySet().stream()
                 .forEach(System.out::println);
 
-        return directorsRating;
+        return personsRating;
     }
 }

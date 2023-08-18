@@ -9,25 +9,9 @@ import java.util.LinkedHashMap;
 
 public interface VariousRatings {
 
-    private static double getActorRating() {
-        return 0.0;
-    }
-
-    private static double getDirectorRating(Movie movie, ArrayList<UserMovie> userMovies)
-    {
-        Person director = movie.getPerson("director");
-        LinkedHashMap<Person, Double> userRatings = UserRatingsInfo.PersonsRating(userMovies, "director", 2);
-        Double rating = userRatings.entrySet().stream()
-                .filter(p -> p.equals(director))
-                .map(i -> i.getValue())
-                .findFirst()
-                .orElse(null);
-        return rating;
-    }
-
-    private static double getWriterRating(Movie movie, ArrayList<UserMovie> userMovies) {
-        Person writer = movie.getPerson("writer");
-        LinkedHashMap<Person, Double> userRatings = UserRatingsInfo.PersonsRating(userMovies, "writer", 2);
+    private static double getPersonRating(String per, Movie movie, ArrayList<UserMovie> userMovies) {
+        ArrayList<Person> writer = movie.getPerson(per);
+        LinkedHashMap<Person, Double> userRatings = UserRatingsInfo.PersonsRating(userMovies, per, 2);
         Double rating = userRatings.entrySet().stream()
                 .filter(p -> p.equals(writer))
                 .map(i -> i.getValue())
@@ -37,6 +21,7 @@ public interface VariousRatings {
     }
 
     private static double getGenreRating() {
+
         return 0.0;
     }
 
@@ -46,7 +31,10 @@ public interface VariousRatings {
 
         double kpRating = 0.044 * movie.getkpRating() - 0.24;
 
-        double movieRating = getActorRating()+ getWriterRating(movie, userMovies) + getDirectorRating(movie, userMovies) + getGenreRating() + kpRating;
+        double movieRating = getPersonRating("actor", movie, userMovies) +
+                getPersonRating("writer", movie, userMovies)
+                + getPersonRating("director", movie, userMovies)
+                + getGenreRating() + kpRating;
 
         return movieRating;
     }

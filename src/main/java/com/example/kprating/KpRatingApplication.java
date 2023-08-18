@@ -16,10 +16,10 @@ public class KpRatingApplication {
         SpringApplication.run(KpRatingApplication.class, args);
 
         ArrayList<UserMovie> userMovies = JsonToObject.UserMovieRating(15935377);
-        //System.out.println(userMovies);
+        System.out.println(userMovies);
 
         //System.out.println(UserRatingsInfo.PersonsRating(userMovies, "director", 2));
-        System.out.println(UserRatingsInfo.PersonsRating(userMovies, "writer", 2));
+        //System.out.println(UserRatingsInfo.PersonsRating(userMovies, "actor", 2));
 
         //MovieList allMovies = JsonToObject.AllMovies(7);
 

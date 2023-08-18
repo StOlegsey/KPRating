@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Getter
 @NoArgsConstructor
@@ -27,6 +28,19 @@ public class Movie {
     @SerializedName("persons")
     private List<Person> personArrayList = new ArrayList<>();
 
+    @SerializedName("genres")
+    private List<Genre> genreList = new ArrayList<>();
+
+    private class Genre
+    {
+        @SerializedName("name")
+        private String name;
+
+        public String getName() {
+            return name;
+        }
+    }
+
     private class Rating
     {
         @SerializedName("kp")
@@ -37,14 +51,21 @@ public class Movie {
         return rating.kp;
     }
 
+    public ArrayList<String> getGenresName() {
+        return genreList.stream()
+                .map(e-> e.getName())
+                .limit(3)
+                .collect(Collectors.toCollection(ArrayList::new));
+    }
 
-    public Person getPerson(String person){//Возвращаем список топ 3 персон
-        Optional<Person> optionalDirector = personArrayList.stream()
+    public ArrayList<Person> getPerson(String person){
+
+        ArrayList<Person> personList = personArrayList.stream()
                 .filter(element -> element.getEnProfession().equals(person))
-                .findFirst();
-        Person director = optionalDirector.orElseThrow(() -> new NullPointerException());
+                .limit(3)
+                .collect(Collectors.toCollection(ArrayList::new));
 
-        return director;
+        return personList;
     }
 
     @Override
