@@ -7,7 +7,7 @@ import lombok.Getter;
 public class Person {
 
     @SerializedName("id")
-    private int id;
+    private Integer id;
 
     @SerializedName("name")
     private String name;

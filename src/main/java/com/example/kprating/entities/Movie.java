@@ -15,7 +15,7 @@ import java.util.Optional;
 public class Movie {
 
     @SerializedName("id")
-    private int id;
+    private Integer id;
     @SerializedName("name")
     private String name;
     @SerializedName("year")
@@ -38,7 +38,7 @@ public class Movie {
     }
 
 
-    public Person getPerson(String person){
+    public Person getPerson(String person){//Возвращаем список топ 3 персон
         Optional<Person> optionalDirector = personArrayList.stream()
                 .filter(element -> element.getEnProfession().equals(person))
                 .findFirst();

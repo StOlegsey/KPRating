@@ -18,7 +18,7 @@ public interface QueueToKP {
     private static ResponseEntity<String> makeRequest(String url) throws HttpClientErrorException { // Make a request to KP by url (returns JSON)
 
         HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.add("x-api-key", "06G5ZVJ-368MDQH-MRC5GW9-8HJTMKW"); //71B9447-9N54A3M-KWGEQTW-9A9G4CR
+        httpHeaders.add("x-api-key", "71B9447-9N54A3M-KWGEQTW-9A9G4CR"); //71B9447-9N54A3M-KWGEQTW-9A9G4CR
 
         HttpEntity<String> httpEntity = new HttpEntity<>("body", httpHeaders);
 
