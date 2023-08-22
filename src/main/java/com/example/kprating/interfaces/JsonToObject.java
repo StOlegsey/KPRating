@@ -64,7 +64,7 @@ public interface JsonToObject {
 
         MovieList movieList = new Gson().fromJson(response.getBody(), MovieList.class);
 
-        int total = 1000;//new Gson().fromJson(response.getBody(), JsonObject.class).get("total").getAsInt();
+        int total = 250;//new Gson().fromJson(response.getBody(), JsonObject.class).get("total").getAsInt();
 
         while(total > maxOnPage * page){
             page++;
