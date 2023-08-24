@@ -23,7 +23,10 @@ public class KpRatingApplication {
 
         SpringApplication.run(KpRatingApplication.class, args);
 
+
         ArrayList<UserMovie> userMovies = JsonToObject.UserMovieRating(15935377);
+        //System.out.println(userMovies);
+        //System.out.println(userMovies.size());
         //System.out.println(userMovies);
 
         //System.out.println(UserRatingsInfo.GenresRating(userMovies, 2));

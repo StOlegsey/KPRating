@@ -16,43 +16,54 @@ public interface JsonToObject {
     @Description("Map from Raw JSON to HashMap(UserMovieInfo, UserRating)")
     public static ArrayList<UserMovie> UserMovieRating(Integer userId) throws NumberFormatException {
 
-        final String response = QueueToKP.getUserMovies(userId).toString();
+        final int perpage = 200;
 
-        List<Integer> movieRating = Arrays.stream(response.split("<div class=\"vote\" >"))
-                .skip(1)
-                .map(s -> s.substring(0, s.indexOf("</div>")))
-                .map(s -> Integer.parseInt(s))
-                .collect(Collectors.toList());
-
-        List<Integer> movieId = Arrays.stream(response.split("<div class=\"nameRus\"><a href=\"/(film|series)/"))
-                .skip(1)
-                .map(s -> s.substring(0, s.indexOf("/")))
-                .map(s -> Integer.parseInt(s))
-                .collect(Collectors.toList());
-
-        LinkedHashMap<Integer, Integer> userRating = new LinkedHashMap<>();
-        Iterator<Integer> ik = movieId.iterator();
-        Iterator<Integer> iv = movieRating.iterator();
-
-        while (ik.hasNext() && iv.hasNext()) {
-            userRating.put(ik.next(), iv.next());
-        }
-
-        ArrayList<Integer> userMoviesList = new ArrayList<>();
-        userRating.forEach((key, value) -> userMoviesList.add(key));
-
-        MovieList movieList = new Gson().fromJson(QueueToKP.getMoviesByIDs(userMoviesList).getBody(), MovieList.class);
+        int page = 0;
+        int total = perpage;
 
         ArrayList<UserMovie> userMovieRating = new ArrayList<>();
 
-        for (Movie movie : movieList.getMovieArrayList()) {
-            Integer rating = userRating.get(movie.getId());
-            if (rating != null) {
-                userMovieRating.add(new UserMovie(movie, rating));
+        while(page * perpage <= total) {
+            page++;
+            final String response = QueueToKP.getUserMovies(userId, page, perpage).toString();
+
+            total = Integer.valueOf(response.substring(response.indexOf(" из ") + 4, response.indexOf(" из ") + 7));
+
+            List<Integer> movieRating = Arrays.stream(response.split("<div class=\"vote\" >"))
+                    .skip(1)
+                    .map(s -> s.substring(0, s.indexOf("</div>")))
+                    .map(s -> Integer.parseInt(s))
+                    .collect(Collectors.toList());
+
+            List<Integer> movieId = Arrays.stream(response.split("<div class=\"nameRus\"><a href=\"/(film|series)/"))
+                    .skip(1)
+                    .map(s -> s.substring(0, s.indexOf("/")))
+                    .map(s -> Integer.parseInt(s))
+                    .collect(Collectors.toList());
+
+            LinkedHashMap<Integer, Integer> userRating = new LinkedHashMap<>();
+            Iterator<Integer> ik = movieId.iterator();
+            Iterator<Integer> iv = movieRating.iterator();
+
+            while (ik.hasNext() && iv.hasNext()) {
+                userRating.put(ik.next(), iv.next());
             }
+
+            ArrayList<Integer> userMoviesList = new ArrayList<>();
+            userRating.forEach((key, value) -> userMoviesList.add(key));
+
+            MovieList movieList = new Gson().fromJson(QueueToKP.getMoviesByIDs(userMoviesList).getBody(), MovieList.class); // Too many requests
+
+            for (Movie movie : movieList.getMovieArrayList()) {
+                Integer rating = userRating.get(movie.getId());
+                if (rating != null) {
+                    userMovieRating.add(new UserMovie(movie, rating));
+                }
+            }
+
         }
 
-        return userMovieRating;
+        return userMovieRating; // Несколько фильмов почему то пропадает
     }
 
     @Description("Map from Raw JSON to Movie.ArrayList")

@@ -37,8 +37,9 @@ public interface QueueToKP {
         return makeRequest(url);
     }
 
-    public static ResponseEntity<String> getUserMovies(int userId) { // returns user movies (raw json) by user id
-        final String url = "https://www.kinopoisk.ru/user/"+userId+"/votes/list/vs/vote/perpage/200/#list";
+    public static ResponseEntity<String> getUserMovies(int userId, int page, int perpage) { // returns user movies (raw json) by user id
+        final String url = "https://www.kinopoisk.ru/user/"+userId+"/votes/list/vs/vote/page/"+page+"/perpage/"+perpage+"/#list";
+        System.out.println(url);
 
         return makeRequest(url);
     }
