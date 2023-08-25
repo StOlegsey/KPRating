@@ -4,6 +4,7 @@ import com.example.kprating.entities.Movie;
 import com.example.kprating.entities.MovieList;
 import com.example.kprating.entities.UserMovie;
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import jdk.jfr.Description;
 import org.springframework.http.ResponseEntity;
 
@@ -64,7 +65,7 @@ public interface JsonToObject {
         return userMovieRating; // Несколько фильмов почему то пропадает
     }
 
-    @Description("Map from Raw JSON to Movie.ArrayList")
+    @Description("Map from Raw JSON to MovieList")
     public static MovieList AllMovies(int rating_from, ArrayList<UserMovie> userMovies){
         final int maxOnPage = 250;
         int page = 1;
@@ -73,7 +74,7 @@ public interface JsonToObject {
 
         MovieList movieList = new Gson().fromJson(response.getBody(), MovieList.class);
 
-        int total = 500;//new Gson().fromJson(response.getBody(), JsonObject.class).get("total").getAsInt();
+        int total = new Gson().fromJson(response.getBody(), JsonObject.class).get("total").getAsInt();
 
         while(total > maxOnPage * page){
             page++;

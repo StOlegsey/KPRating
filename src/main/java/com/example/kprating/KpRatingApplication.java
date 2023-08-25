@@ -5,6 +5,7 @@ import com.example.kprating.entities.MovieList;
 import com.example.kprating.entities.UserMovie;
 import com.example.kprating.interfaces.Constants;
 import com.example.kprating.interfaces.JsonToObject;
+import com.example.kprating.interfaces.UserRatingsInfo;
 import com.example.kprating.interfaces.VariousRatings;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -33,9 +34,14 @@ public class KpRatingApplication {
 
         MovieList allMovies = JsonToObject.AllMovies(Constants.GoodMovieRating, userMovies);
 
+        LinkedHashMap<Integer, Double> actorRatings = UserRatingsInfo.PersonsRating(userMovies, Constants.profession.get(0));
+        LinkedHashMap<Integer, Double> writerRatings = UserRatingsInfo.PersonsRating(userMovies, Constants.profession.get(1));
+        LinkedHashMap<Integer, Double> directorRatings = UserRatingsInfo.PersonsRating(userMovies, Constants.profession.get(2));
+        LinkedHashMap<String, Double> genresRating = UserRatingsInfo.GenresRating(userMovies);//{name: 0.33, name: 0.66, name:1}
+
         LinkedHashMap<String, Double> allMovieRatings = new LinkedHashMap<>();
         for (Movie movie : allMovies.getMovieArrayList()) {
-                double rating = VariousRatings.getMovieRating(movie, userMovies);
+                double rating = VariousRatings.getMovieRating(movie, userMovies, actorRatings, writerRatings, directorRatings, genresRating);
                 allMovieRatings.put(movie.getName(), rating);
         }
 
@@ -44,7 +50,7 @@ public class KpRatingApplication {
         allMovieRatings.entrySet().stream()
                 .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
                 .forEachOrdered(x -> sortedMovieRatings.put(x.getKey(), x.getValue()));
-        System.out.println(sortedMovieRatings);
+        //System.out.println(sortedMovieRatings);
     }
 
 }
