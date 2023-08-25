@@ -1,7 +1,8 @@
 package com.example.kprating.entities;
 
-import java.util.List;
+import lombok.Getter;
 
+@Getter
 public class UserMovie extends Movie{
 
     private int userScore;

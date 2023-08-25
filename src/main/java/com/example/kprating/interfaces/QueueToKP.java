@@ -1,28 +1,31 @@
 package com.example.kprating.interfaces;
 
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.http.*;
 import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.UriBuilder;
 
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 
 public interface QueueToKP {
 
-    private static ResponseEntity<String> makeRequest(String url) throws HttpClientErrorException { // Make a request to KP by url (returns JSON)
+    private static ResponseEntity<String> makeRequest(String url) { // Make a request to KP by url (returns JSON)
 
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.add("x-api-key", "71B9447-9N54A3M-KWGEQTW-9A9G4CR"); //71B9447-9N54A3M-KWGEQTW-9A9G4CR
+        ResponseEntity<String> JSONresult = new ResponseEntity<>(HttpStatusCode.valueOf(400));
 
-        HttpEntity<String> httpEntity = new HttpEntity<>("body", httpHeaders);
+        try {
+            HttpHeaders httpHeaders = new HttpHeaders();
+            httpHeaders.add("x-api-key", "71B9447-9N54A3M-KWGEQTW-9A9G4CR"); //71B9447-9N54A3M-KWGEQTW-9A9G4CR
 
-        ResponseEntity<String> JSONresult = new RestTemplate().exchange(url, HttpMethod.GET, httpEntity, String.class);
+            HttpEntity<String> httpEntity = new HttpEntity<>("body", httpHeaders);
+
+            JSONresult = new RestTemplate().exchange(url, HttpMethod.GET, httpEntity, String.class);
+        }
+            catch (HttpServerErrorException | HttpClientErrorException e)
+            {
+                System.out.println(url + " throws: " + e);
+            }
 
         return JSONresult;
     }

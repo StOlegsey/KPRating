@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Getter
@@ -31,7 +30,7 @@ public class Movie {
     @SerializedName("genres")
     private List<Genre> genreList = new ArrayList<>();
 
-    private class Genre
+    private static class Genre
     {
         @SerializedName("name")
         private String name;
@@ -41,7 +40,7 @@ public class Movie {
         }
     }
 
-    private class Rating
+    private static class Rating
     {
         @SerializedName("kp")
         private double kp;
@@ -53,19 +52,17 @@ public class Movie {
 
     public ArrayList<String> getGenresName() {
         return genreList.stream()
-                .map(e-> e.getName())
+                .map(Genre::getName)
                 .limit(3)
                 .collect(Collectors.toCollection(ArrayList::new));
     }
 
     public ArrayList<Person> getPerson(String person){
 
-        ArrayList<Person> personList = personArrayList.stream()
+        return personArrayList.stream()
                 .filter(element -> element.getEnProfession().equals(person))
                 .limit(3)
                 .collect(Collectors.toCollection(ArrayList::new));
-
-        return personList;
     }
 
     @Override

@@ -4,12 +4,10 @@ import com.example.kprating.entities.Movie;
 import com.example.kprating.entities.MovieList;
 import com.example.kprating.entities.UserMovie;
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 import jdk.jfr.Description;
 import org.springframework.http.ResponseEntity;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 public interface JsonToObject {
 
@@ -27,19 +25,19 @@ public interface JsonToObject {
             page++;
             final String response = QueueToKP.getUserMovies(userId, page, perpage).toString();
 
-            total = Integer.valueOf(response.substring(response.indexOf(" из ") + 4, response.indexOf(" из ") + 7));
+            total = Integer.parseInt(response.substring(response.indexOf(" из ") + 4, response.indexOf(" из ") + 7));
 
             List<Integer> movieRating = Arrays.stream(response.split("<div class=\"vote\" >"))
                     .skip(1)
                     .map(s -> s.substring(0, s.indexOf("</div>")))
-                    .map(s -> Integer.parseInt(s))
-                    .collect(Collectors.toList());
+                    .map(Integer::parseInt)
+                    .toList();
 
             List<Integer> movieId = Arrays.stream(response.split("<div class=\"nameRus\"><a href=\"/(film|series)/"))
                     .skip(1)
                     .map(s -> s.substring(0, s.indexOf("/")))
-                    .map(s -> Integer.parseInt(s))
-                    .collect(Collectors.toList());
+                    .map(Integer::parseInt)
+                    .toList();
 
             LinkedHashMap<Integer, Integer> userRating = new LinkedHashMap<>();
             Iterator<Integer> ik = movieId.iterator();
@@ -67,7 +65,7 @@ public interface JsonToObject {
     }
 
     @Description("Map from Raw JSON to Movie.ArrayList")
-    public static MovieList AllMovies(int rating_from){
+    public static MovieList AllMovies(int rating_from, ArrayList<UserMovie> userMovies){
         final int maxOnPage = 250;
         int page = 1;
 
@@ -75,7 +73,7 @@ public interface JsonToObject {
 
         MovieList movieList = new Gson().fromJson(response.getBody(), MovieList.class);
 
-        int total = 250;//new Gson().fromJson(response.getBody(), JsonObject.class).get("total").getAsInt();
+        int total = 500;//new Gson().fromJson(response.getBody(), JsonObject.class).get("total").getAsInt();
 
         while(total > maxOnPage * page){
             page++;
@@ -84,9 +82,18 @@ public interface JsonToObject {
 
             response = QueueToKP.getAllMovies(rating_from,maxOnPage,page);
 
+            MovieList recievedMovies = new Gson().fromJson(response.getBody(), MovieList.class);
+
             movieList.getMovieArrayList()
-                    .addAll(new Gson().fromJson(response.getBody(), MovieList.class).getMovieArrayList());
+                    .addAll(recievedMovies.getMovieArrayList());
         }
+
+        movieList.getMovieArrayList().removeIf(movie ->
+                userMovies.stream()
+                        .map(Movie::getId)
+                        .toList()
+                        .contains(movie.getId())
+        );
 
         return movieList;
     }
