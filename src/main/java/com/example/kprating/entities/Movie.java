@@ -67,10 +67,11 @@ public class Movie {
 
     @Override
     public String toString() {
-        return "\nid=" + id +
-                ", name='" + name + '\'' +
-                ", year=" + year +
-                ", rating=" + rating.kp +
-                ", personsArrayList=" + personArrayList;
+        return "\n"+//id=" + id +
+                '\'' + name + '\'' +
+                '(' + year + ')'+
+                ", KP: " + rating.kp+
+                "\t|  Your Rating ";
+                //", personsArrayList=" + personArrayList;
     }
 }

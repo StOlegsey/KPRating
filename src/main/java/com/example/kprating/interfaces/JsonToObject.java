@@ -60,13 +60,16 @@ public interface JsonToObject {
                 }
             }
 
+
         }
+
+        System.out.println(userMovieRating.size()+": всего");
 
         return userMovieRating; // Несколько фильмов почему то пропадает
     }
 
     @Description("Map from Raw JSON to MovieList")
-    public static MovieList AllMovies(int rating_from, ArrayList<UserMovie> userMovies){
+    public static MovieList AllMovies(int rating_from, ArrayList<UserMovie> userMovies, Integer total){
         final int maxOnPage = 250;
         int page = 1;
 
@@ -74,7 +77,9 @@ public interface JsonToObject {
 
         MovieList movieList = new Gson().fromJson(response.getBody(), MovieList.class);
 
-        int total = new Gson().fromJson(response.getBody(), JsonObject.class).get("total").getAsInt();
+        if(total == null) {
+            total = new Gson().fromJson(response.getBody(), JsonObject.class).get("total").getAsInt();
+        }
 
         while(total > maxOnPage * page){
             page++;

@@ -16,7 +16,7 @@ public interface QueueToKP {
 
         try {
             HttpHeaders httpHeaders = new HttpHeaders();
-            httpHeaders.add("x-api-key", "71B9447-9N54A3M-KWGEQTW-9A9G4CR"); //71B9447-9N54A3M-KWGEQTW-9A9G4CR
+            httpHeaders.add("x-api-key", Constants.apiToken);
 
             HttpEntity<String> httpEntity = new HttpEntity<>("body", httpHeaders);
 
