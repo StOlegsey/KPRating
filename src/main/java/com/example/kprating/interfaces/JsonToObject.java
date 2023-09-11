@@ -15,16 +15,16 @@ public interface JsonToObject {
     @Description("Map from Raw JSON to HashMap(UserMovieInfo, UserRating)")
     public static ArrayList<UserMovie> UserMovieRating(Integer userId) throws NumberFormatException {
 
-        final int perpage = 200;
+        final int perPage = 200;
 
         int page = 0;
-        int total = perpage;
+        int total = perPage;
 
         ArrayList<UserMovie> userMovieRating = new ArrayList<>();
 
-        while(page * perpage <= total) {
+        while(page * perPage <= total) {
             page++;
-            final String response = QueueToKP.getUserMovies(userId, page, perpage).toString();
+            final String response = QueueToKP.getUserMovies(userId, page, perPage).toString();
 
             total = Integer.parseInt(response.substring(response.indexOf(" из ") + 4, response.indexOf(" из ") + 7));
 

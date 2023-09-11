@@ -31,7 +31,7 @@ public class getRatingService {
         LinkedHashMap<Movie, Double> allMovieRatings = new LinkedHashMap<>();
 
         for(Movie movie : allMovies.getMovieArrayList()) {
-            double rating = VariousRatings.getMovieRating(movie, userMovies, actorRatings, writerRatings, directorRatings, genresRating);
+            double rating = VariousRatings.getMovieRating(movie, actorRatings, writerRatings, directorRatings, genresRating);
             allMovieRatings.put(movie, rating);
         }
 

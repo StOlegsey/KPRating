@@ -42,20 +42,7 @@ public interface UserRatingsInfo {
                         v -> Math.min(v.getValue() / dirSize * Constants.modifierForRating, 0.2), //if rating > 0.2: set 0.2
                         (v1, v2) -> v1,
                         LinkedHashMap::new
-                ));/*         // (id:1, freq:0.2); (id:2, freq:0.01)
-                .entrySet()
-                .stream()
-                .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
-                .collect(Collectors.toMap(
-                        (k) -> (personList.stream()
-                                .flatMap(List::stream)
-                                .filter((p)-> p.getId().equals(k.getKey()))
-                                .findFirst()
-                                .orElse(null)),
-                        Map.Entry::getValue,
-                        (v1, v2) -> v1,
-                        LinkedHashMap::new
-                ));*/
+                ));
 
         //personsRating.entrySet().stream()
                // .forEach(System.out::println);
@@ -97,15 +84,12 @@ public interface UserRatingsInfo {
                 .stream()
                 .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
                 .collect(Collectors.toMap(
-                        (k) -> (genreList.stream()
-                                .flatMap(List::stream)
-                                .filter((p)-> p.equals(k.getKey()))
-                                .findFirst()
-                                .orElse(null)),
+                        Map.Entry::getKey,
                         Map.Entry::getValue,
                         (v1, v2) -> v1,
                         LinkedHashMap::new
                 ));
+        System.out.println(genreRating);
 
         //genreRating.entrySet().stream()
                // .forEach(System.out::println);

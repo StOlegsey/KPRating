@@ -33,7 +33,7 @@ public interface VariousRatings {
         return rating;
     }
 
-    public static double getMovieRating(Movie movie, ArrayList<UserMovie> userMovies, LinkedHashMap<Integer, Double> actorRatings, LinkedHashMap<Integer, Double> writerRatings,LinkedHashMap<Integer, Double> directorRatings, LinkedHashMap<String, Double> genresRating){
+    public static double getMovieRating(Movie movie, LinkedHashMap<Integer, Double> actorRatings, LinkedHashMap<Integer, Double> writerRatings,LinkedHashMap<Integer, Double> directorRatings, LinkedHashMap<String, Double> genresRating){
 
         double kpRating = 0.044 * movie.getkpRating() - 0.24;
 
